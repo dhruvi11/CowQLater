@@ -10,6 +10,7 @@ import SplashScreen from '../screens/SplashScreen'
 import DashboardScreen from '../screens/DashboardScreen'
 import SettingScreen from '../screens/SettingScreen'
 import RecordSaveScreen from '../screens/RecordSaveScreen'
+import ChartScreen from '../screens/ChartScreen'
 
 const StackNavigator = () => {
   return (
@@ -35,6 +36,11 @@ const StackNavigator = () => {
         options={{headerShown: false}}
         name={'RecordSaveScreen'}
         component={RecordSaveScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name={'ChartScreen'}
+        component={ChartScreen}
       />
     </Stack.Navigator>
   );

@@ -33,5 +33,10 @@ export default images={
     noData:require("../images/noData.png"),
     increase:require("../images/increase.png"),
     decrease:require("../images/decrease.png"),
+
     calendar:require("../images/calendar.png"),
+    rainfall:require("../images/rainfall.png"),
+    barchart:require("../images/barchart.png"),
+    cowtally:require("../images/calculator.png"),
+    cowQTally:require("../images/cowQTally.png"),
 }

@@ -25,8 +25,10 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import LinearGradient from 'react-native-linear-gradient';
+import {Calendar, LocaleConfig} from 'react-native-calendars';
 import HeaderAdd from '../component/HeaderAdd';
 import {EmailData} from '../constants/EmailData';
+
 const RecordSaveScreen = ({navigation}) => {
   const [dateValue, setdateValue] = useState(new Date(Date.now()));
   const [openValue, setOpen] = useState(false);
@@ -68,25 +70,36 @@ const RecordSaveScreen = ({navigation}) => {
     console.log(value);
     setdateValue(value);
     console.log(dateValue);
-    setdateValue(new Date(Date.now()))
-    setmlValue("")
+    setdateValue(new Date(Date.now()));
+    setmlValue('');
     setOpen(false);
   };
   // Render ======================================================================================
   return (
     <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={{flexGrow:1}}>
       <View style={styles.container}>
+        <StatusBar backgroundColor={'#68BBE3'} barStyle={'dark-content'} />
         <Spinner visible={spinner} size={'large'} color="#0E86D4" />
         <HeaderAdd
           onPress={() => {
             navigation.goBack();
           }}
+          // onPress1={() => {
+          //   navigation.navigate("ChartScreen");
+          // }}
           headerText={'Record Data'}
           rightIcon={images.backArrow}
+          leftIcon={images.barchart}
         />
         <View style={{paddingTop: responsiveScreenWidth(5)}}>
           <View style={styles.viewRow}>
-            <TextInput style={styles.textInputStyle} value={dateValue} placeholder='01/01/2023' editable={false} />
+            <TextInput
+              style={styles.textInputStyle}
+              value={dateValue}
+              placeholder="01/01/2023"
+              editable={false}
+            />
             <TouchableOpacity
               style={{
                 justifyContent: 'center',
@@ -96,20 +109,46 @@ const RecordSaveScreen = ({navigation}) => {
               onPress={() => {
                 setOpen(true);
               }}>
-              <Image resizeMode='contain' source={images.calendar} style={styles.imageicon} />
+              <Image
+                resizeMode="contain"
+                source={images.calendar}
+                style={styles.imageicon}
+              />
             </TouchableOpacity>
           </View>
-          {openValue && (
-            <DateTimePicker
-              value={dateValue}
-              mode={'date'}
-              dateFormat={'DD/MM/YYYY'}
-              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-              is24Hour={true}
-              onChange={onChange}
-              style={styles.datePicker}
-            />
-          )}
+          <Calendar
+            // Customize the appearance of the calendar
+            style={{
+              borderWidth: 0.5,
+              borderColor: 'gray',
+              height: 350,
+              width: '80%',
+              alignSelf: 'center',
+              marginTop:responsiveScreenWidth(2)
+            }}
+            // Specify the current date
+            current={new Date(Date.now())}
+            // Callback that gets called when the user selects a day
+            onDayPress={day => {
+              console.log('selected day', day);
+              var tempDate = day.day + '/' + day.month + '/' + day.year;
+              setdateValue(tempDate);
+            }}
+            // Mark specific dates as marked
+            // markedDates={{
+            //   '2023-06-01': {
+            //     selected: true,
+            //     marked: true,
+            //     selectedColor: 'blue',
+            //   },
+            //   '2023-06-02': {marked: true},
+            //   '2023-06-03': {
+            //     selected: true,
+            //     marked: true,
+            //     selectedColor: 'blue',
+            //   },
+            // }}
+          />
           <View
             style={{
               flexDirection: 'row',
@@ -121,7 +160,7 @@ const RecordSaveScreen = ({navigation}) => {
             <View style={{width: '40%'}}>
               <Text style={styles.titleText}>Rainfall in ML</Text>
             </View>
-            <View style={{width: '60%'}}>
+            <View style={{width: '60%',marginTop:responsiveScreenWidth(5)}}>
               <TextInput
                 keyboardType="number-pad"
                 placeholder="0"
@@ -155,6 +194,7 @@ const RecordSaveScreen = ({navigation}) => {
           </TouchableOpacity>
         </LinearGradient>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -181,7 +221,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     color: colors.BLACK,
-    fontSize:responsiveScreenFontSize(2)
+    fontSize: responsiveScreenFontSize(2),
   },
   titleText: {
     fontSize: responsiveScreenFontSize(1.8),
@@ -228,8 +268,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     borderRadius: responsiveScreenWidth(1),
-    position: 'absolute',
-    bottom: responsiveScreenWidth(10),
+    marginTop: responsiveScreenWidth(10),
   },
   boxView: {
     height: responsiveScreenWidth(35),

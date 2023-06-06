@@ -30,9 +30,9 @@ const SettingScreen = ({navigation}) => {
   const [spinner, setspinner] = useState(false);
   // UseEffect ======================================================================================
   useEffect(async () => {
-    setspinner(true)
+    setspinner(true);
     getItemData();
-  },[]);
+  }, []);
   // UseEffect ======================================================================================
   getItemData = async () => {
     let userName = await AsyncStorage.getItem('userName');
@@ -45,20 +45,21 @@ const SettingScreen = ({navigation}) => {
     if (userEmail != '') {
       setEmail(userEmail);
     }
-    setspinner(false)
+    setspinner(false);
   };
   savePersonalInfo = async () => {
     await AsyncStorage.setItem('userName', name);
     await AsyncStorage.setItem('userEmail', email);
     alert('Data updated');
-    setspinner(false)
-    navigation.goBack()
+    setspinner(false);
+    navigation.goBack();
   };
   // Render ======================================================================================
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        <Spinner visible={spinner} size={'large'} color='#0E86D4'/>
+        <StatusBar backgroundColor={'#68BBE3'} barStyle={'dark-content'} />
+        <Spinner visible={spinner} size={'large'} color="#0E86D4" />
         <HeaderAdd
           onPress={() => {
             navigation.goBack();
@@ -73,8 +74,8 @@ const SettingScreen = ({navigation}) => {
             style={styles.textInputStyle}
             value={name}
             onChangeText={value => {
-              console.log(value)
-              setName(value)
+              console.log(value);
+              setName(value);
             }}
           />
           <Text style={styles.titleText}>Email</Text>
@@ -83,8 +84,8 @@ const SettingScreen = ({navigation}) => {
             style={styles.textInputStyle}
             value={email}
             onChangeText={value => {
-              console.log(value)
-              setEmail(value)
+              console.log(value);
+              setEmail(value);
             }}
           />
         </View>
@@ -93,7 +94,7 @@ const SettingScreen = ({navigation}) => {
           style={styles.btnStyle}>
           <TouchableOpacity
             onPress={() => {
-              setspinner(true)
+              setspinner(true);
               savePersonalInfo();
             }}>
             <Text style={styles.saveText}>Save</Text>

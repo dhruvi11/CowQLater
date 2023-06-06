@@ -86,7 +86,16 @@ const styles = StyleSheet.create({
     paddingStart: responsiveScreenWidth(6),
     paddingEnd: responsiveScreenWidth(6),
     borderBottomColor: colors.gray,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   headerText: {
     fontSize: responsiveScreenFontSize(2.5),
