@@ -85,9 +85,9 @@ const RecordSaveScreen = ({navigation}) => {
           onPress={() => {
             navigation.goBack();
           }}
-          // onPress1={() => {
-          //   navigation.navigate("ChartScreen");
-          // }}
+          onPress1={() => {
+            navigation.navigate("ChartScreen");
+          }}
           headerText={'Record Data'}
           rightIcon={images.backArrow}
           leftIcon={images.barchart}

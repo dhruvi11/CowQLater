@@ -12,7 +12,7 @@ import {
   TextInput,
   Linking,
   Alert,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 // Custom ======================================================================================
 import colors from '../res/colors/colors';
@@ -26,29 +26,6 @@ import {BarChart} from 'react-native-chart-kit';
 
 import HeaderAdd from '../component/HeaderAdd';
 
-const screenWidth = Dimensions.get('window').width;
-const data = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-  datasets: [
-    {
-      data: [20, 45, 28, 80, 99, 43],
-    },
-  ],
-};
-const chartConfig = {
-  backgroundGradientFrom: '#fff',
-  backgroundGradientFromOpacity: 0,
-  backgroundGradientTo: '#fff',
-  backgroundGradientToOpacity: 0.5,
-
-  color: (opacity = 1) => `#023047`,
-  labelColor: (opacity = 1) => `#333`,
-  strokeWidth: 2,
-
-  barPercentage: 0.5,
-  useShadowColorFromDataset: false,
-  decimalPlaces: 0,
-};
 const ChartScreen = ({navigation}) => {
   const [spinner, setspinner] = useState(false);
   // UseEffect ======================================================================================
@@ -67,12 +44,31 @@ const ChartScreen = ({navigation}) => {
             rightIcon={images.backArrow}
           />
           <BarChart
-            width={responsiveScreenWidth(80)}
-            height={responsiveScreenWidth(50)}
-            data={data}
-            yAxisLabel="$"
-            chartConfig={chartConfig}
-            // style={styles.boxView}
+            data={{
+              labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+              datasets: [
+                {
+                  data: [20, 45, 28, 80, 99, 43],
+                },
+              ],
+            }}
+            width={Dimensions.get('window').width - 16}
+            height={220}
+            yAxisLabel={'Ltr'}
+            chartConfig={{
+              backgroundColor: '#1cc910',
+              backgroundGradientFrom: '#eff3ff',
+              backgroundGradientTo: '#efefef',
+              decimalPlaces: 2,
+              color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              style: {
+                borderRadius: 16,
+              },
+            }}
+            style={{
+              marginVertical: 8,
+              borderRadius: 16,
+            }}
           />
         </View>
       </ScrollView>
