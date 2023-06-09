@@ -28,7 +28,7 @@ export default images={
     settings:require("../images/settings.png"),
     logout:require("../images/logout.png"),
     rightarrow:require("../images/rightarrow.png"),
-    user:require("../images/user.png"),
+    user:require("../images/users.png"),
     wifi:require("../images/wifi.png"),
     noData:require("../images/noData.png"),
     increase:require("../images/increase.png"),
@@ -39,4 +39,5 @@ export default images={
     barchart:require("../images/barchart.png"),
     cowtally:require("../images/calculator.png"),
     cowQTally:require("../images/cowQTally.png"),
+    Location:require("../images/location.png"),
 }

@@ -11,6 +11,10 @@ import DashboardScreen from '../screens/DashboardScreen'
 import SettingScreen from '../screens/SettingScreen'
 import RecordSaveScreen from '../screens/RecordSaveScreen'
 import ChartScreen from '../screens/ChartScreen'
+import TallyScreen from '../screens/TallyScreen'
+import AddFarmScreen from '../screens/AddFarmScreen'
+import FarmTallyScreen from '../screens/FarmTallyScreen'
+import CountPaddockScreen from '../screens/CountPaddockScreen'
 
 const StackNavigator = () => {
   return (
@@ -41,6 +45,26 @@ const StackNavigator = () => {
         options={{headerShown: false}}
         name={'ChartScreen'}
         component={ChartScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name={'TallyScreen'}
+        component={TallyScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name={'AddFarmScreen'}
+        component={AddFarmScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name={'FarmTallyScreen'}
+        component={FarmTallyScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name={'CountPaddockScreen'}
+        component={CountPaddockScreen}
       />
     </Stack.Navigator>
   );

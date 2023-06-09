@@ -52,13 +52,13 @@ const ChartScreen = ({navigation}) => {
                 },
               ],
             }}
-            width={Dimensions.get('window').width - 16}
+            width={Dimensions.get('window').width - 50}
             height={220}
             yAxisLabel={'Ltr'}
             chartConfig={{
               backgroundColor: '#1cc910',
               backgroundGradientFrom: '#eff3ff',
-              backgroundGradientTo: '#efefef',
+              backgroundGradientTo: '#68BBE3',
               decimalPlaces: 2,
               color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
               style: {
@@ -68,6 +68,9 @@ const ChartScreen = ({navigation}) => {
             style={{
               marginVertical: 8,
               borderRadius: 16,
+              alignSelf:"center",
+              justifyContent:"center",
+              marginTop:responsiveScreenWidth(10)
             }}
           />
         </View>

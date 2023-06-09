@@ -24,32 +24,95 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import HeaderAdd from '../component/HeaderAdd';
 
-const SettingScreen = ({navigation}) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+const AddFarmScreen = ({navigation}) => {
+  const [farmname, setFarmName] = useState('DC House');
+  const [paddockCategory1, setpaddockCategory1] = useState('Cow');
+  const [paddockCategory2, setpaddockCategory2] = useState('Horse');
+  const [paddockCategory3, setpaddockCategory3] = useState('');
   const [spinner, setspinner] = useState(false);
+  const [tempFarmName, settempFarmName] = useState([]);
+  const [tempPaddock, settempPaddock] = useState([]);
+
   // UseEffect ======================================================================================
   useEffect(async () => {
-    setspinner(true);
     getItemData();
   }, []);
   // UseEffect ======================================================================================
-  getItemData = async () => {
-    let userName = await AsyncStorage.getItem('userName');
-    let userEmail = await AsyncStorage.getItem('userEmail');
-    console.log(userEmail);
-    console.log(userName);
-    if (userName != '') {
-      setName(userName);
+  const getItemData = async () => {
+    let tempFarmName1 = await AsyncStorage.getItem('farmData');
+    let tempPaddock1 = await AsyncStorage.getItem('paddockData');
+
+    console.log(tempFarmName1);
+    console.log(tempPaddock1);
+
+    if (tempFarmName1 != null) {
+      settempFarmName(tempFarmName.concat(tempFarmName1))
+      console.log(tempFarmName);
     }
-    if (userEmail != '') {
-      setEmail(userEmail);
+
+    if (tempPaddock1 != null) {
+      settempPaddock(tempPaddock.concat(tempPaddock1))
+      console.log(tempPaddock);
     }
-    setspinner(false);
+
+    console.log('tempFarmName',tempFarmName);
+    console.log("tempPaddock",tempPaddock);
   };
-  savePersonalInfo = async () => {
-    await AsyncStorage.setItem('userName', name);
-    await AsyncStorage.setItem('userEmail', email);
+  // UseEffect ======================================================================================
+  const saveFarmInfo = async () => {
+    console.log('tempPaddock2', tempFarmName);
+    console.log('tempPaddock2', tempPaddock);
+
+    if (tempFarmName == null) {
+      let data = {};
+      data.value = farmname;
+      data.item = farmname;
+
+      tempFarmName.push(data);
+      await AsyncStorage.setItem('farmData', JSON.stringify(tempFarmName));
+    } else {
+      let data = {};
+      data.value = farmname;
+      data.item = farmname;
+
+      tempFarmName.push(data);
+      await AsyncStorage.setItem('farmData', JSON.stringify(tempFarmName));
+      console.log('tempFarmName11', tempFarmName);
+    }
+
+    if (tempPaddock == null) {
+      let data = {};
+      data.value = paddockCategory1;
+      data.item = paddockCategory1;
+      tempPaddock.push(data);
+      settempPaddock(tempPaddock);
+    } else {
+      let data1 = {};
+      data1.value = paddockCategory1;
+      data1.item = paddockCategory1;
+
+      tempPaddock.push(data1);
+      settempPaddock(tempPaddock);
+
+      let data2 = {};
+      data2.value = paddockCategory2;
+      data2.item = paddockCategory2;
+
+      tempPaddock.push(data2);
+      settempPaddock(tempPaddock);
+
+      let data3 = {};
+      data3.value = paddockCategory2;
+      data3.item = paddockCategory2;
+
+      tempPaddock.push(data2);
+      settempPaddock(tempPaddock);
+      console.log('tempPaddock11', tempPaddock);
+    }
+    console.log('tempPaddock2', tempFarmName);
+    console.log('tempPaddock2', tempPaddock);
+    await AsyncStorage.setItem('farmData', JSON.stringify(tempFarmName));
+    await AsyncStorage.setItem('paddockData', JSON.stringify(tempPaddock));
     alert('Data updated');
     setspinner(false);
     navigation.goBack();
@@ -64,28 +127,48 @@ const SettingScreen = ({navigation}) => {
           onPress={() => {
             navigation.goBack();
           }}
-          headerText={'Add Profile'}
+          headerText={'Setting'}
           rightIcon={images.backArrow}
         />
         <View style={{paddingTop: responsiveScreenWidth(5)}}>
-          <Text style={styles.titleText}>Full Name</Text>
+          <Text style={styles.titleText}>Farm Name</Text>
           <TextInput
-            placeholder="Full Name"
+            placeholder="Farm Name"
             style={styles.textInputStyle}
-            value={name}
+            value={farmname}
             onChangeText={value => {
               console.log(value);
-              setName(value);
+              setFarmName(value);
             }}
           />
-          <Text style={styles.titleText}>Email</Text>
+          <Text style={styles.titleText}>Paddock Category1</Text>
           <TextInput
-            placeholder="Email"
+            placeholder="Paddock Category1"
             style={styles.textInputStyle}
-            value={email}
+            value={paddockCategory1}
             onChangeText={value => {
               console.log(value);
-              setEmail(value);
+              setpaddockCategory1(value);
+            }}
+          />
+          <Text style={styles.titleText}>Paddock Category2</Text>
+          <TextInput
+            placeholder="Paddock Category2"
+            style={styles.textInputStyle}
+            value={paddockCategory2}
+            onChangeText={value => {
+              console.log(value);
+              setpaddockCategory2(value);
+            }}
+          />
+          <Text style={styles.titleText}>Paddock Category3</Text>
+          <TextInput
+            placeholder="Paddock Category3"
+            style={styles.textInputStyle}
+            value={paddockCategory3}
+            onChangeText={value => {
+              console.log(value);
+              setpaddockCategory3(value);
             }}
           />
         </View>
@@ -95,7 +178,7 @@ const SettingScreen = ({navigation}) => {
           <TouchableOpacity
             onPress={() => {
               setspinner(true);
-              savePersonalInfo();
+              saveFarmInfo();
             }}>
             <Text style={styles.saveText}>Save</Text>
           </TouchableOpacity>
@@ -171,4 +254,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SettingScreen;
+export default AddFarmScreen;

@@ -47,7 +47,7 @@ const HeaderAdd = props => {
             source={props.leftIcon !== '' ? props.leftIcon : images.Check}
             // source={props.leftIcon}
             resizeMode="contain"
-            style={styles.ProfileIcon}
+            style={[styles.ProfileIcon,props.ProfileIconstyle]}
           />
         </TouchableOpacity>
       </View>
