@@ -15,6 +15,7 @@ import TallyScreen from '../screens/TallyScreen'
 import AddFarmScreen from '../screens/AddFarmScreen'
 import FarmTallyScreen from '../screens/FarmTallyScreen'
 import CountPaddockScreen from '../screens/CountPaddockScreen'
+import AddPaddockScreen from '../screens/AddPaddockScreen'
 
 const StackNavigator = () => {
   return (
@@ -65,6 +66,11 @@ const StackNavigator = () => {
         options={{headerShown: false}}
         name={'CountPaddockScreen'}
         component={CountPaddockScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name={'AddPaddockScreen'}
+        component={AddPaddockScreen}
       />
     </Stack.Navigator>
   );

@@ -10,6 +10,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from 'react-native';
 // Custom ======================================================================================
 import colors from '../res/colors/colors';
@@ -23,6 +24,18 @@ import LinearGradient from 'react-native-linear-gradient';
 import Spinner from 'react-native-loading-spinner-overlay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import HeaderAdd from '../component/HeaderAdd';
+import SQLite from 'react-native-sqlite-storage';
+
+//database connection
+const db = SQLite.openDatabase(
+  {
+    name: 'mydb',
+    location: 'default'
+  },
+  () => { console.log("Database connected!") }, //on success
+  error => console.log("Database error", error) //on error
+)
+
 
 const SettingScreen = ({navigation}) => {
   const [name, setName] = useState('');
@@ -34,25 +47,50 @@ const SettingScreen = ({navigation}) => {
     getItemData();
   }, []);
   // UseEffect ======================================================================================
-  getItemData = async () => {
-    let userName = await AsyncStorage.getItem('userName');
-    let userEmail = await AsyncStorage.getItem('userEmail');
-    console.log(userEmail);
-    console.log(userName);
-    if (userName != '') {
-      setName(userName);
-    }
-    if (userEmail != '') {
-      setEmail(userEmail);
-    }
-    setspinner(false);
+  const getItemData = async () => {
+    let sql = 'SELECT * FROM emaildetail';
+    db.transaction(tx => {
+      tx.executeSql(
+        sql,
+        [],
+        (tx, resultSet) => {
+          var length = resultSet.rows.length;
+          for (var i = 0; i < length; i++) {
+            console.log(resultSet.rows.item(i));
+            setEmail(resultSet.rows.item(i).email)
+            setName(resultSet.rows.item(i).name)
+          }
+          setspinner(false);
+        },
+        error => {
+          console.log('List user error', error);
+          setspinner(false);
+        },
+      );
+    });
+
   };
-  savePersonalInfo = async () => {
-    await AsyncStorage.setItem('userName', name);
-    await AsyncStorage.setItem('userEmail', email);
-    alert('Data updated');
-    setspinner(false);
-    navigation.goBack();
+
+  const savePersonalInfo = async () => {
+    let sql = 'INSERT INTO emaildetail (email, name) VALUES (?, ?)';
+    let params = [email, name];
+    db.executeSql(
+      sql,
+      params,
+      result => {
+        navigation.goBack();
+        Alert.alert('Success', 'User detail updated successfully.', [
+          {text: 'OK', onPress: () => {
+            setspinner(false);
+            global.email=email
+            console.log('OK Pressed')}},
+        ]);
+    
+      },
+      error => {
+        console.log('Create user error', error);
+      },
+    );
   };
   // Render ======================================================================================
   return (

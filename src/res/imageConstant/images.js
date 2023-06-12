@@ -40,4 +40,5 @@ export default images={
     cowtally:require("../images/calculator.png"),
     cowQTally:require("../images/cowQTally.png"),
     Location:require("../images/location.png"),
+    ridding:require("../images/riding.png"),
 }

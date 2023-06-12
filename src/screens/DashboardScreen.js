@@ -10,6 +10,7 @@ import {
   Image,
   TouchableOpacity,
   Modal,
+  Alert,
 } from 'react-native';
 // Custom ======================================================================================
 import colors from '../res/colors/colors';
@@ -21,9 +22,150 @@ import {
 } from '../utils/Size';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import HeaderAdd from '../component/HeaderAdd';
+import SQLite from 'react-native-sqlite-storage';
+import {all} from 'axios';
+
+//database connection
+const db = SQLite.openDatabase(
+  {
+    name: 'mydb',
+    location: 'default',
+  },
+  () => {
+    console.log('Database connected!');
+  }, //on success
+  error => console.log('Database error', error), //on error
+);
 
 const DashboardScreen = ({navigation}) => {
+  const [spinner, setspinner] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  // useEffect ======================================================================================
+  useEffect(() => {
+    createEmailDetailTable(); //create the table
+    createFarmDetailTable(); //create the table
+    createPaddockDetailTable(); //create the table
+    createRainFallDetailTable(); //create the table
+    // createTallyDetailTable(); //create the table
+    checkUserExist();
+    getFarmItemData();
+  });
+  // Databse ======================================================================================
+  //create table function
+  const createEmailDetailTable = () => {
+    db.executeSql(
+      'CREATE TABLE IF NOT EXISTS emaildetail (id INTEGER PRIMARY KEY AUTOINCREMENT, email VARCHAR, name VARCHAR)',
+      [],
+      result => {
+        console.log('Table created successfully');
+      },
+      error => {
+        console.log('Create table error', error);
+      },
+    );
+  };
+
+  //create table function
+  const createFarmDetailTable = () => {
+    db.executeSql(
+      'CREATE TABLE IF NOT EXISTS farmdetail (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR,area VARCHAR)',
+      [],
+      result => {
+        console.log('Table created successfully');
+      },
+      error => {
+        console.log('Create table error', error);
+      },
+    );
+  };
+  //create table function
+  const createPaddockDetailTable = () => {
+    db.executeSql(
+      'CREATE TABLE IF NOT EXISTS paddockdetail (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR,age VARCHAR,total VARCHAR)',
+      [],
+      result => {
+        console.log('Table created successfully');
+      },
+      error => {
+        console.log('Create table error', error);
+      },
+    );
+  };
+  //create table function
+  const createRainFallDetailTable = () => {
+    db.executeSql(
+      'CREATE TABLE IF NOT EXISTS rainfalldetail (id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR, mililiter VARCHAR,farmname VARCHAR)',
+      [],
+      result => {
+        console.log('Table created successfully');
+      },
+      error => {
+        console.log('Create table error', error);
+      },
+    );
+  };
+  // //create table function
+  // const createTallyDetailTable = () => {
+  //   db.executeSql("CREATE TABLE IF NOT EXISTS emaildetail (id INTEGER PRIMARY KEY AUTOINCREMENT, email VARCHAR, name VARCHAR)",[], (result) => {
+  //     console.log("Table created successfully");
+  //   }, (error) => {
+  //     console.log("Create table error", error)
+  //   })
+  // }
+
+  // Render ======================================================================================
+  const checkUserExist = () => {
+    // setspinner(true);
+    let sql = 'SELECT * FROM emaildetail';
+    db.transaction(tx => {
+      tx.executeSql(
+        sql,
+        [],
+        (tx, resultSet) => {
+          var length = resultSet.rows.length;
+          for (var i = 0; i < length; i++) {
+            console.log(resultSet.rows.item(i));
+            setEmail(resultSet.rows.item(i).email);
+            global.email = resultSet.rows.item(i).email;
+            console.log('global.email', global.email);
+            // setspinner(false);
+          }
+        },
+        error => {
+          console.log('List user error', error);
+          //setspinner(false);
+        },
+      );
+    });
+    console.log('global.email', global.email);
+  };
+  const getFarmItemData = async () => {
+    // setspinner(true);
+    let sql = 'SELECT * FROM farmdetail';
+    db.transaction(tx => {
+      tx.executeSql(
+        sql,
+        [],
+        (tx, resultSet) => {
+          var length = resultSet.rows.length;
+          let tempData = [];
+          for (var i = 0; i < length; i++) {
+            console.log(resultSet.rows.item(i));
+            setName(resultSet.rows.item(i).name);
+            // tempData.push(resultSet.rows.item(i));
+          }
+          // setFarmData(tempData);
+          // setspinner(false);
+        },
+        error => {
+          console.log('List user error', error);
+          // setspinner(false);
+        },
+      );
+    });
+  };
   // Render ======================================================================================
   return (
     <SafeAreaView style={styles.container}>
@@ -42,7 +184,50 @@ const DashboardScreen = ({navigation}) => {
         <View style={styles.rowView}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('RecordSaveScreen');
+              // alert(email)
+              if (email === undefined) {
+                Alert.alert(
+                  'Alert',
+                  'Please fill user detail to procced further.',
+                  [
+                    {
+                      text: 'Cancle',
+                      onPress: () => {
+                        console.log('OK Pressed');
+                      },
+                    },
+                    {
+                      text: 'OK',
+                      onPress: () => {
+                        navigation.navigate('SettingScreen');
+                        console.log('OK Pressed');
+                      },
+                    },
+                  ],
+                );
+              } else if (name === undefined) {
+                Alert.alert(
+                  'Alert',
+                  'Please fill farm detail to procced further.',
+                  [
+                    {
+                      text: 'Cancle',
+                      onPress: () => {
+                        console.log('OK Pressed');
+                      },
+                    },
+                    {
+                      text: 'OK',
+                      onPress: () => {
+                        navigation.navigate('AddFarmScreen');
+                        console.log('OK Pressed');
+                      },
+                    },
+                  ],
+                );
+              } else {
+                navigation.navigate('RecordSaveScreen');
+              }
             }}
             style={styles.boxView}>
             <Image
@@ -54,7 +239,50 @@ const DashboardScreen = ({navigation}) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('FarmTallyScreen');
+              // alert(global.email)
+              if (email === undefined) {
+                Alert.alert(
+                  'Alert',
+                  'Please fill user detail to procced further.',
+                  [
+                    {
+                      text: 'Cancle',
+                      onPress: () => {
+                        console.log('OK Pressed');
+                      },
+                    },
+                    {
+                      text: 'OK',
+                      onPress: () => {
+                        navigation.navigate('SettingScreen');
+                        console.log('OK Pressed');
+                      },
+                    },
+                  ],
+                );
+              } else if (name === undefined) {
+                Alert.alert(
+                  'Alert',
+                  'Please fill farm detail to procced further.',
+                  [
+                    {
+                      text: 'Cancle',
+                      onPress: () => {
+                        console.log('OK Pressed');
+                      },
+                    },
+                    {
+                      text: 'OK',
+                      onPress: () => {
+                        navigation.navigate('AddFarmScreen');
+                        console.log('OK Pressed');
+                      },
+                    },
+                  ],
+                );
+              } else {
+                navigation.navigate('FarmTallyScreen');
+              }
             }}
             style={styles.boxView}>
             <Image
@@ -95,10 +323,10 @@ const DashboardScreen = ({navigation}) => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-               onPress={() => {
-                setModalVisible(false);
-                navigation.navigate('AddFarmScreen');
-              }}
+                onPress={() => {
+                  setModalVisible(false);
+                  navigation.navigate('AddFarmScreen');
+                }}
                 style={{
                   flexDirection: 'row',
                   marginTop: responsiveScreenWidth(2),
@@ -113,7 +341,29 @@ const DashboardScreen = ({navigation}) => {
                     styles.titleText,
                     {marginTop: responsiveScreenFontSize(0)},
                   ]}>
-                  Add Farm/Poddock
+                  Add Farm
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisible(false);
+                  navigation.navigate('AddPaddockScreen');
+                }}
+                style={{
+                  flexDirection: 'row',
+                  marginTop: responsiveScreenWidth(2),
+                }}>
+                <Image
+                  source={images.ridding}
+                  resizeMode="contain"
+                  style={styles.otherIcon}
+                />
+                <Text
+                  style={[
+                    styles.titleText,
+                    {marginTop: responsiveScreenFontSize(0)},
+                  ]}>
+                  Add Paddock
                 </Text>
               </TouchableOpacity>
             </View>

@@ -24,6 +24,19 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Dropdown} from 'react-native-element-dropdown';
 import HeaderAdd from '../component/HeaderAdd';
+import SQLite from 'react-native-sqlite-storage';
+
+//database connection
+const db = SQLite.openDatabase(
+  {
+    name: 'mydb',
+    location: 'default',
+  },
+  () => {
+    console.log('Database connected!');
+  }, //on success
+  error => console.log('Database error', error), //on error
+);
 
 let tempFarmData;
 let tempPaddockData;
@@ -52,18 +65,57 @@ const FarmTallyScreen = ({navigation}) => {
   // UseEffect ======================================================================================
   useEffect(async () => {
     setspinner(true);
-    getItemData();
+    getFarmItemData();
+    getPaddockItemData();
   }, []);
   // UseEffect ======================================================================================
-  getItemData = async () => {
-    tempFarmData = await AsyncStorage.getItem('farmData');
-    tempPaddockData = await AsyncStorage.getItem('paddockData');
-    console.log(tempFarmData);
-    console.log(tempPaddockData);
-    setFarmData(JSON.parse(tempFarmData));
-    setPaddockData(JSON.parse(tempPaddockData));
-    console.log(FarmData);
-    setspinner(false);
+  const getFarmItemData = async () => {
+    let sql = 'SELECT * FROM farmdetail';
+    db.transaction(tx => {
+      tx.executeSql(
+        sql,
+        [],
+        (tx, resultSet) => {
+          var length = resultSet.rows.length;
+          let tempData = [];
+          for (var i = 0; i < length; i++) {
+            console.log(resultSet.rows.item(i));
+            // setName(resultSet.rows.item(i).name)
+            tempData.push(resultSet.rows.item(i));
+          }
+          setFarmData(tempData);
+          setspinner(false);
+        },
+        error => {
+          console.log('List user error', error);
+          setspinner(false);
+        },
+      );
+    });
+  };
+  const getPaddockItemData = async () => {
+    let sql = 'SELECT * FROM paddockdetail';
+    db.transaction(tx => {
+      tx.executeSql(
+        sql,
+        [],
+        (tx, resultSet) => {
+          var length = resultSet.rows.length;
+          let tempData = [];
+          for (var i = 0; i < length; i++) {
+            console.log(resultSet.rows.item(i));
+            tempData.push(resultSet.rows.item(i));
+            // setName(resultSet.rows.item(i).name)
+          }
+          setPaddockData(tempData);
+          setspinner(false);
+        },
+        error => {
+          console.log('List user error', error);
+          setspinner(false);
+        },
+      );
+    });
   };
 
   // Render ======================================================================================
@@ -91,15 +143,15 @@ const FarmTallyScreen = ({navigation}) => {
             inputSearchStyle={styles.inputSearchStyle}
             data={FarmData}
             maxHeight={300}
-            labelField="item"
-            valueField="value"
+            labelField="name"
+            valueField="name"
             placeholder={!isFocus1 ? 'Select item' : '...'}
             searchPlaceholder="Search..."
             value={value1}
             onFocus={() => setIsFocus1(true)}
             onBlur={() => setIsFocus1(false)}
             onChange={item => {
-              setValue1(item.item);
+              setValue1(item.name);
               setIsFocus1(false);
             }}
           />
@@ -114,20 +166,20 @@ const FarmTallyScreen = ({navigation}) => {
             inputSearchStyle={styles.inputSearchStyle}
             data={PaddockData}
             maxHeight={300}
-            labelField="item"
-            valueField="value"
+            labelField="name"
+            valueField="name"
             placeholder={!isFocus2 ? 'Select item' : '...'}
             searchPlaceholder="Search..."
             value={value2}
             onFocus={() => setIsFocus2(true)}
             onBlur={() => setIsFocus2(false)}
             onChange={item => {
-              setValue2(item.item);
+              setValue2(item.name);
               setIsFocus2(false);
             }}
           />
         </View>
-        {value2 != '' ? (
+        {/* {value2 != '' ? (
           <View
             style={{
               flexDirection: 'row',
@@ -186,7 +238,7 @@ const FarmTallyScreen = ({navigation}) => {
               </Text>
             </View>
           </View>
-        ) : null}
+        ) : null} */}
         <LinearGradient
           colors={['#68BBE3', '#0E86D4', '#055C9D']}
           style={styles.btnStyle}>
@@ -251,7 +303,7 @@ const styles = StyleSheet.create({
   boxImage: {
     height: responsiveScreenWidth(4),
     width: responsiveScreenWidth(4),
-   justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   rowView: {

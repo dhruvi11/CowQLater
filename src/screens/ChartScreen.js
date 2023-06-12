@@ -45,16 +45,16 @@ const ChartScreen = ({navigation}) => {
           />
           <BarChart
             data={{
-              labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+              labels: ['Jan-Mar', 'Apr-June', 'July-Sept', 'Oct-Dec'],
               datasets: [
                 {
-                  data: [20, 45, 28, 80, 99, 43],
+                  data: [20, 45, 28, 80],
                 },
               ],
             }}
             width={Dimensions.get('window').width - 50}
             height={220}
-            yAxisLabel={'Ltr'}
+            yAxisLabel={'ML'}
             chartConfig={{
               backgroundColor: '#1cc910',
               backgroundGradientFrom: '#eff3ff',
@@ -68,9 +68,9 @@ const ChartScreen = ({navigation}) => {
             style={{
               marginVertical: 8,
               borderRadius: 16,
-              alignSelf:"center",
-              justifyContent:"center",
-              marginTop:responsiveScreenWidth(10)
+              alignSelf: 'center',
+              justifyContent: 'center',
+              marginTop: responsiveScreenWidth(10),
             }}
           />
         </View>

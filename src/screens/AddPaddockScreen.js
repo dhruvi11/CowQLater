@@ -37,27 +37,23 @@ const db = SQLite.openDatabase(
   error => console.log('Database error', error), //on error
 );
 
-const AddFarmScreen = ({navigation}) => {
-  const [farmname, setFarmName] = useState('');
-  const [farmArea, setfarmArea] = useState('');
+const AddPaddockScreen = ({navigation}) => {
+  const [paddockNumber, setpaddockNumber] = useState('');
+  const [animalCount, setanimalCount] = useState('');
+  const [animalAge, setanimalAge] = useState('');
+  const [animalName, setanimalName] = useState('');
   // const [paddockCategory2, setpaddockCategory2] = useState('Horse');
   // const [paddockCategory3, setpaddockCategory3] = useState('');
   const [spinner, setspinner] = useState(false);
-
   // UseEffect ======================================================================================
-  useEffect(async () => {
-    getItemData();
-  }, []);
-  // UseEffect ======================================================================================
-  // UseEffect ======================================================================================
-  const saveAddFarmInfo = async () => {
-    let sql = 'INSERT INTO farmdetail (name,area) VALUES (?,?)';
-    let params = [farmname,farmArea];
+  const saveAddPaddockInfo = async () => {
+    let sql = 'INSERT INTO paddockdetail (name,age,total) VALUES (?,?,?)';
+    let params = [animalName,animalAge,animalCount];
     db.executeSql(
       sql,
       params,
       result => {
-        Alert.alert('Success', 'Farm detail updated successfully.', [
+        Alert.alert('Success', 'Paddock detail updated successfully.', [
           {
             text: 'OK',
             onPress: () => {
@@ -84,62 +80,54 @@ const AddFarmScreen = ({navigation}) => {
             onPress={() => {
               navigation.goBack();
             }}
-            headerText={'Add Farm'}
+            headerText={'Add Paddock'}
             rightIcon={images.backArrow}
           />
           <View style={{paddingTop: responsiveScreenWidth(5)}}>
-            <Text style={styles.titleText}>Farm Name</Text>
+            <Text style={styles.titleText}>Paddock Number</Text>
             <TextInput
               placeholder="Farm Name"
               style={styles.textInputStyle}
-              value={farmname}
+              value={paddockNumber}
               onChangeText={value => {
                 console.log(value);
-                setFarmName(value);
+                setpaddockNumber(value);
               }}
             />
-            <Text style={styles.titleText}>Farm Area</Text>
+            <Text style={styles.titleText}>Category</Text>
+            <View>
+
+            </View>
+            <Text style={styles.titleText}>Count</Text>
             <TextInput
-              placeholder="Farm Area(12*12)"
+              placeholder="0"
               style={styles.textInputStyle}
-              value={farmArea}
+              value={animalCount}
               onChangeText={value => {
                 console.log(value);
-                setfarmArea(value);
+                setanimalCount(value);
               }}
             />
-          {/*   <Text style={styles.titleText}>Paddock Category2</Text>
+            <Text style={styles.titleText}>Age</Text>
             <TextInput
-              placeholder="Paddock Category2"
+              placeholder="0"
               style={styles.textInputStyle}
-              value={paddockCategory2}
+              value={animalAge}
               onChangeText={value => {
                 console.log(value);
-                setpaddockCategory2(value);
+                setanimalAge(value);
               }}
             />
-            <Text style={styles.titleText}>Paddock Category3</Text>
-            <TextInput
-              placeholder="Paddock Category3"
-              style={styles.textInputStyle}
-              value={paddockCategory3}
-              onChangeText={value => {
-                console.log(value);
-                setpaddockCategory3(value);
-              }}
-            /> */}
           </View>
           <LinearGradient
             colors={['#68BBE3', '#0E86D4', '#055C9D']}
             style={styles.btnStyle}>
             <TouchableOpacity
               onPress={() => {
-                if(farmname!=""&&farmArea!=""){
+                if(farmname!=""){
                 setspinner(true);
-                saveAddFarmInfo();}
-                else{
-                  alert("Please enter all details.")
-                }
+                saveAddPaddockInfo();
+            }
               }}>
               <Text style={styles.saveText}>Save</Text>
             </TouchableOpacity>
@@ -216,4 +204,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddFarmScreen;
+export default AddPaddockScreen;
